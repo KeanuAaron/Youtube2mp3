@@ -8,16 +8,16 @@ import threading #using to open threads to read status while downloading
 import requests # using to find the name of the video title
 import progressbar
 
-from bs4 import BeautifulSoup as soup
+from bs4 import BeautifulSoup as soup # only using to grab the video name.
 from tqdm import tqdm # progress bar
 
 
-totalBytes = 40000
+totalBytes = 40000 # temp value for the progress bar max_value
 ascii_chars = ''
 page_title = ''
 
 
-class Color:
+class Color: # just simple colors to make it look nice when printing
 	CYAN = '\033[96m'
 	BLUE = '\033[94m'
 	GREEN = '\033[92m'
@@ -45,7 +45,7 @@ def my_hook(d):
 	global pBar
 	
 	totalBytes = d['total_bytes']
-	pBar.start(init=True)
+	pBar.start(init=True) # reinitializing the progressbar for updates.
 
 	if d['status'] == 'finished':
 		pBar.finish()
@@ -73,6 +73,7 @@ ydl_opts = {
 	'progress_hooks': [ my_hook ],
 }
 
+# starts video download and progress bar
 def video2mp3( video_link ):
 	global pBar 
 	pBar = progressbar.ProgressBar(max_error=False)
@@ -82,6 +83,7 @@ def video2mp3( video_link ):
 		ydl.download([ video_link ])
 
 
+# grabbing video name to show what is downloading.
 def grab_title_name( video_link ):
 	global page_title
 	r = requests.get(video_link).content
@@ -90,6 +92,8 @@ def grab_title_name( video_link ):
 	print(Color.BOLD + Color.UNDERLINE + Color.CYAN + '[-] Downloading: ' + page_title + Color.END)
 
 
+# youtube_dl downloads videos and saves them with the random ascii letters
+# attached. This function just moves and renames the files.
 def bash_rename():
 	global page_title
 	global ascii_chars
@@ -97,10 +101,11 @@ def bash_rename():
 	new_title = page_title +'.mp3'
 	page_title = page_title +'-'+ ascii_chars +'.mp3'
 
-	os.system('mv "%s" "/home/dextop/Desktop/LoD_Share/Internal Storage/%s"' % (page_title, new_title))
-	print(Color.BOLD + Color.YELLOW + '[+] File saved under ~/Destkop/LoD_Share/Internal Storage/%s' % (new_title) + Color.END)
+	os.system('mv "%s" "/New/Path/To/Save/Under/%s"' % (page_title, new_title))
+	print(Color.BOLD + Color.YELLOW + '[+] File saved under ~/New/Path/To/Save/Under/%s' % (new_title) + Color.END)
 
 
+# initializes the download process
 def main(video_link):
 	global ascii_chars
 	
