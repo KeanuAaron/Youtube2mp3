@@ -4,12 +4,10 @@ import sys
 import time
 import argparse
 import youtube_dl
-import threading #using to open threads to read status while downloading
 import requests # using to find the name of the video title
 import progressbar
 
 from bs4 import BeautifulSoup as soup # only using to grab the video name.
-from tqdm import tqdm # progress bar
 
 
 totalBytes = 40000 # temp value for the progress bar max_value
